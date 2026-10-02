@@ -71,6 +71,7 @@ td:nth-child(7){
   justify-content: space-between;
   width: 370px;
   margin: auto;
+  user-select: none;
 }
 
 /* エラー表示 */
