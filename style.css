@@ -1,0 +1,117 @@
+@charset "UTF-8";
+
+html{
+  font-size: 62.5%;
+  font-family: "M PLUS Rounded 1c", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+#wrapper{
+  width: 600px;
+  margin: 0 auto;
+  font-size: 1.8rem;
+  line-height: 1.8;
+  box-sizing: border-box;
+}
+
+h1{
+  font-size: 2rem;
+  text-align: center;
+}
+
+p{
+  margin:1rem 2rem;
+}
+
+div{
+  margin:0 2rem;
+}
+
+#form{
+  width:300px;
+  margin: 0 auto;
+  box-sizing: border-box;
+  text-align: center;
+}
+
+input{
+  width: 60px;
+  text-align: center;
+}
+
+/* カレンダー描画 */
+table{
+  border-collapse: collapse;
+  margin: 0 auto;
+  width: 370px;
+}
+
+td,th{
+  width: 5rem;
+  height: 3rem;
+  text-align: center;
+  border: 1px solid #555;
+}
+
+th:nth-child(6),
+td:nth-child(6){
+  background-color: rgba(0 0 255/0.1);
+  color: blue;
+}
+
+th:nth-child(7),
+td:nth-child(7){
+  background-color: rgba(255 0 0/0.1);
+  color: red;
+}
+
+#table-head{
+  display: flex;
+  justify-content: space-between;
+  width: 370px;
+  margin: auto;
+}
+
+/* エラー表示 */
+#error-area{
+  min-height: 3.4rem;
+  margin: 1rem 0;
+}
+
+#error-Year,
+#error-Month{
+  /* visibility: hidden; */
+  display: none;
+}
+
+/* 前月/翌月移動 */
+#prev{
+	width:0;
+	height:0;
+  margin:5px 0;
+	border-top:10px solid transparent;
+	border-right:15px solid black;
+	border-bottom:10px solid transparent;
+	border-left:5px solid transparent;
+}
+
+#prev:hover{
+  border-right:15px solid rgba(0,0,0,0.5);
+  cursor: pointer;
+}
+
+#next{
+	width:0;
+	height:0;
+  margin:5px 0;
+	border-top:10px solid transparent;
+	border-right:5px solid transparent;
+	border-bottom:10px solid transparent;
+	border-left:15px solid black;
+}
+
+#next:hover{
+	border-left:15px solid rgba(0,0,0,0.5);
+  cursor: pointer;
+}

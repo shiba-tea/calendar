@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8">
+    <title>万年カレンダー</title>
+
+    <link href="style.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c&display=swap" rel="stylesheet">
+  </head>
+
+  <body>
+    <div id="wrapper">
+      <h1>万年カレンダー</h1>
+      <p>
+        ２００１年１月以降のカレンダーを表示します。<br>
+        西暦と月を入力し、表示ボタンをクリックしてください。
+      </p>
+      <p id="form">
+        <input type="number" id="year" placeholder="2001" min="2001" max="9999">年
+        <input type="number" id="month" placeholder="1" min="1" max="12">月
+        <input type="button" value="表示" id="viewbtn">
+      </p>
+      <div id="error-area">
+        <div id="error-Year"></div>
+        <div id="error-Month"></div>
+      </div>
+
+      <div id="table-area">
+        <div id="table-head"></div>
+        <table></table>
+      </div>
+
+      <script>
+        const viewBtn = document.getElementById("viewbtn");
+        const calendarTableHead = document.getElementById("table-head");
+        const calendarTable = document.getElementsByTagName("table");
+        const errorYear = document.getElementById("error-Year");
+        const errorMonth = document.getElementById("error-Month");
+        let year;
+        let month;
+
+      // 全体
+        function calendar(Year,Month){
+          // 年月表示・月移動
+          calendarTableHead.innerHTML =
+            `<div id="prev"></div>
+            <div>${Year}年${Month}月</div>
+            <div id="next"></div>`;
+
+          // 前月・翌月移動
+          const prevBtn = document.getElementById("prev");
+          const nextBtn = document.getElementById("next");
+        
+          prevBtn.addEventListener("click",function(){
+            if(Year === 2001 && Month === 1){ // 2001年1月より前なら移動しない
+              errorMonth.innerHTML = "２００１年１月以前の月は表示できません。";
+              errorMonth.style.display = "block";
+              errorYear.style.display = "none";
+              return;
+            } else {
+              errorYear.style.display = "none";
+              if(Month === 1){
+                Month = 12;
+                Year--;
+              } else {
+                Month--;
+              }
+            calendar(Year,Month);
+          }});
+
+          nextBtn.addEventListener("click",function(){
+            errorMonth.style.display = "none";
+            errorYear.style.display = "none";
+            if(Month === 12){
+              Month = 1;
+              Year++;
+            } else {
+              Month++;
+            }
+            calendar(Year,Month);
+          });
+
+          // 曜日表示
+          function calendarHead(){
+            let youbi = ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
+            let youbiH = ""; // 曜日行の描画用
+
+            // 年＋TH（曜日）の描画
+            youbiH = "<thead><tr>";
+            for (let i = 0; i < 7; i++){
+              youbiH += "<th>" + youbi[i] + "</th>";
+            }
+            youbiH += "</tr></thead>";
+
+            let mDay = [31,28,31,30,31,30,31,31,30,31,30,31];
+
+            //閏年からの日数判定
+            if( Year % 400 === 0 || (Year % 4 === 0 && Year % 100 !== 0)){
+              mDay[1] += 1;
+            }
+
+            // 経過年数と曜日の判定
+            let yNum = Year-2001; // 経過年数
+            function leapYear(){ // 閏年の数
+              let n = yNum;
+              return Math.floor(n / 400) + (Math.floor(n / 4) - Math.floor(n / 100));
+            }
+
+            // 対象となる年の１月１日の曜日の算出
+            const tYYoubi = Math.floor((yNum + leapYear()) % 7);
+
+            // 対象となる年月の経過日数から曜日を補正
+            let dTotal = 0; //前月末までの経過日数
+            for(let i = 0; i < Month - 1; i++){
+              dTotal += mDay[i];
+            }
+            let tMYoubi = Math.floor(dTotal % 7); // 対象月の曜日補正値 
+            let dArea = ""; //日部分の描画
+
+            //日の描画
+            let yHosei = Math.floor((tYYoubi + tMYoubi) % 7); //開始曜日の制御
+            let day = 1 - yHosei; // 表示する日の管理
+            while (day <= mDay[Month-1]){
+              dArea += "<tr>";
+              for(let i = 0; i < 7; i++){
+                if( day < 1 || day > mDay[Month-1]){  // dayが1未満なら空欄にする
+                  dArea += "<td>&nbsp;</td>";
+                } else {
+                  dArea += "<td>" + day + "</td>";
+                } day++;
+            }}
+            calendarTable[0].innerHTML = (youbiH + dArea);
+          }
+          calendarHead(); 
+        }
+
+        // viewボタンからの表示処理
+        viewBtn.addEventListener("click",function(){
+          year = Number(document.getElementById("year").value);
+          month = Number(document.getElementById("month").value);
+          if(year < 2001){
+            errorYear.innerHTML = "２００１年以降の年を入力してください。";
+            errorYear.style.display = "block";
+          } else {
+            errorYear.style.display = "none";
+          }
+          if(month < 1 || month > 12){
+            errorMonth.innerHTML = "１月から１２月までの月を入力してください。";
+            errorMonth.style.display = "block";
+          } else {
+            errorMonth.style.display = "none";
+          }
+          if(year >= 2001 && (month >= 1 && month <= 12)){
+            calendar(year,month);   // 正常な場合のみカレンダーを更新
+          }
+        });
+
+      </script>
+
+    </div>
+  </body>
+</html>
